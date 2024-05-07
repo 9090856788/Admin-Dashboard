@@ -1,33 +1,46 @@
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
-import helmet from "helmet";
-import mongoose from "mongoose";
-import morgan from "morgan";
-import dotenv from "dotenv";
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const helmet = require("helmet");
+const dotenv = require("dotenv");
+const morgan = require("morgan");
+const mongoose = require("mongoose");
 
-import generalRoutes from "./routes/general";
-import clientRoutes from "./routes/client";
-import salesRoutes from "./routes/sales";
-import managementRoutes from "./routes/management";
+const generalRoutes = require("./routes/general");
+const clientRoutes = require("./routes/client");
+const salesRoutes = require("./routes/sales");
+const managementRoutes = require ("./routes/management");
 
-
-// CONFIGURATION THE APPLICATION
-dotenv.config();
+const PORT = 3000;
 const app = express();
+dotenv.config();
+
+// MongoDB Connection
+
+const MONGODB_URL = `mongodb+srv://Kanhu143:Kanhu143@admin-dashboard.lpbkre3.mongodb.net/?retryWrites=true&w=majority&appName=Admin-Dashboard`;
+
+mongoose.connect(MONGODB_URL)
+.then(() => {
+    console.log("MongDB Database connected Successfully ): ")
+}).catch((err) => {
+    console.log(err);
+});
+
+// Configuration
 
 app.use(express.json());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin"}));
 app.use(morgan("common"));
 
-// ROUTES
+// app.use("/general", generalRoutes);
+// app.use("/client", clientRoutes);
+// app.use("/sales", salesRoutes);
+// app.use("/management", managementRoutes);
 
-app.use("/", generalRoutes);
-app.use("/", clientRoutes);
-app.use("/", salesRoutes);
-app.use("/", managementRoutes);
-
+app.listen(PORT, (() => {
+    console.log(`Server running on the PORT ${PORT} ): `);
+}))
