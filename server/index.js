@@ -9,9 +9,9 @@ const mongoose = require("mongoose");
 const generalRoutes = require("./routes/general");
 const clientRoutes = require("./routes/client");
 const salesRoutes = require("./routes/sales");
-const managementRoutes = require ("./routes/management");
+const managementRoutes = require("./routes/management");
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const app = express();
 dotenv.config();
 
@@ -19,12 +19,17 @@ dotenv.config();
 
 const MONGODB_URL = `mongodb+srv://Kanhu143:Kanhu143@admin-dashboard.lpbkre3.mongodb.net/?retryWrites=true&w=majority&appName=Admin-Dashboard`;
 
-mongoose.connect(MONGODB_URL)
-.then(() => {
-    console.log("MongDB Database connected Successfully ): ")
-}).catch((err) => {
+mongoose
+  .connect(MONGODB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("MongDB Database connected Successfully ): ");
+  })
+  .catch((err) => {
     console.log(err);
-});
+  });
 
 // Configuration
 
@@ -33,7 +38,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin"}));
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 
 // app.use("/general", generalRoutes);
@@ -41,6 +46,6 @@ app.use(morgan("common"));
 // app.use("/sales", salesRoutes);
 // app.use("/management", managementRoutes);
 
-app.listen(PORT, (() => {
-    console.log(`Server running on the PORT ${PORT} ): `);
-}))
+app.listen(PORT, () => {
+  console.log(`Server running on the PORT ${PORT} ): `);
+});
